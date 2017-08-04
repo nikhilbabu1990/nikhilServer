@@ -12,6 +12,10 @@ package com.uravatech.ast.addition.view.bean;
 
 //import oracle.jbo.Row;
 
+
+import oracle.adf.model.binding.DCIteratorBinding;
+
+import oracle.jbo.Row;
 public class AstTAdditionBean extends UravaMasterPageBean {
     private static UravaADFLogger _logger = UravaADFLogger.createUravaAdfLogger(AstTAdditionBean.class);
    private boolean quickQueryVisible = true;
