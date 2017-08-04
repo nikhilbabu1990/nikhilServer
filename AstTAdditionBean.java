@@ -1,16 +1,16 @@
 package com.uravatech.ast.addition.view.bean;
 
-import com.uravatech.commonui.bean.UravaMasterPageBean;
-import com.uravatech.commonui.utils.ADFUtils;
-import com.uravatech.commonui.utils.JSFUtils;
+//import com.uravatech.commonui.bean.UravaMasterPageBean;
+//import com.uravatech.commonui.utils.ADFUtils;
+//import com.uravatech.commonui.utils.JSFUtils;
 
-import com.uravatech.commonui.utils.UravaADFLogger;
+//import com.uravatech.commonui.utils.UravaADFLogger;
 
-import java.util.ResourceBundle;
+//import java.util.ResourceBundle;
 
-import oracle.adf.model.binding.DCIteratorBinding;
+//import oracle.adf.model.binding.DCIteratorBinding;
 
-import oracle.jbo.Row;
+//import oracle.jbo.Row;
 
 public class AstTAdditionBean extends UravaMasterPageBean {
     private static UravaADFLogger _logger = UravaADFLogger.createUravaAdfLogger(AstTAdditionBean.class);
