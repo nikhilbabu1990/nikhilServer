@@ -82,3 +82,4 @@ end if;
       PKG_GEN_DEBUG.Set_Debug_Log('TR_AD_PAY_M_EMPLOYEE','Trigger',SQLERRM);
       Raise;
 End;
+-- End of the procedure
