@@ -1,0 +1,84 @@
+TRIGGER TR_PAY_M_EMPLOYEE AFTER
+   INSERT OR UPDATE OR DELETE
+  ON PAY_M_EMPLOYEE 
+  FOR EACH ROW
+  /*Created By          :Arishma Ravi
+    Created Date        :31/07/2017
+    Purpose             :Updating FIN_M_SALESMAN on doing changes in SALESMAN of PAY_M_EMPLOYEE */
+  Declare
+   l_Salesman   PAY_M_EMPLOYEE.salesman%Type;
+   L_Salesman_Count      Number:=0;
+   L_Count               Number:=0;
+ BEGIN
+       Select count(*) into L_Salesman_Count
+          from FIN_M_SALESMAN
+             where salesman_code=:New.EMPLOYEE_ID
+             AND COMPANY_CODE  = :New.Company_code;
+             
+IF Inserting then                  
+IF :New.Salesman = 1 THEN             /*On Inserting new Employee, enabling salesman option*/
+IF L_Salesman_Count=0 THEN            /*If that salesman not exisiting in FIN_M_SALESMAN*/
+Insert into FIN_M_SALESMAN (SALESMAN_CODE,SALESMAN_NAME,SALESMAN_NL_NAME,COMPANY_CODE,
+                          BRANCH_CODE,STATUS,CREATED_BY,CREATED_DATE,MODIFIED_BY,MODIFIED_DATE,
+                          OBJECT_VERSION,LOGIN_SESSION_ID)
+            values (:New.EMPLOYEE_ID,:New.EMPLOYEE_NAME,:New.EMPLOYEE_NL_NAME,:New.COMPANY_CODE,NULL,1,
+            :New.CREATED_BY,:New.CREATED_DATE,:New.MODIFIED_BY,:New.MODIFIED_DATE,:New.OBJECT_VERSION,:New.LOGIN_SESSION_ID);
+else
+RAISE_APPLICATION_ERROR (-20001,'Salesman with '||:New.EMPLOYEE_ID||' already exists');
+END IF;
+END IF;
+
+IF :New.Salesman = 0 THEN         /*On Inserting new Employee, disabling salesman option*/
+L_Count:=0;
+ Select count(*) into L_Count      
+          from fin_t_voucher_head
+             where salesman_code=:Old.EMPLOYEE_ID
+             AND COMPANY_CODE  = :Old.Company_code;
+IF L_Count = 0 THEN               /*Transaction does not exist for that employee*/
+DELETE FROM FIN_M_SALESMAN WHERE SALESMAN_CODE = :Old.Employee_Id
+                             AND COMPANY_CODE  = :Old.Company_code;
+else
+RAISE_APPLICATION_ERROR (-20001,'	Cannot delete. This record is already used in another screens. ');
+END IF;
+END IF;
+end if;
+
+IF Updating then
+If :New.SALESMAN<>:Old.SALESMAN THEN          /*If updations made in Employee SALESMAN column*/
+IF :New.Salesman = 1 THEN
+IF L_Salesman_Count=0 THEN
+Insert into FIN_M_SALESMAN (SALESMAN_CODE,SALESMAN_NAME,SALESMAN_NL_NAME,COMPANY_CODE,
+                          BRANCH_CODE,STATUS,CREATED_BY,CREATED_DATE,MODIFIED_BY,MODIFIED_DATE,
+                          OBJECT_VERSION,LOGIN_SESSION_ID)
+            values (:New.EMPLOYEE_ID,:New.EMPLOYEE_NAME,:New.EMPLOYEE_NL_NAME,:New.COMPANY_CODE,NULL,1,
+            :New.CREATED_BY,:New.CREATED_DATE,:New.MODIFIED_BY,:New.MODIFIED_DATE,:New.OBJECT_VERSION,:New.LOGIN_SESSION_ID);
+else
+RAISE_APPLICATION_ERROR (-20001,'Salesman '||:New.EMPLOYEE_ID||' already exists');
+END IF;
+END IF;
+
+IF :New.Salesman = 0 THEN
+L_Count:=0;
+ Select count(*) into L_Count
+          from fin_t_voucher_head
+             where salesman_code=:Old.EMPLOYEE_ID
+             AND COMPANY_CODE  = :Old.Company_code;
+IF L_Count = 0 THEN
+DELETE FROM FIN_M_SALESMAN WHERE SALESMAN_CODE = :Old.Employee_Id
+                             AND COMPANY_CODE  = :Old.Company_code;
+else
+RAISE_APPLICATION_ERROR (-20001,'	Cannot delete. This record is already used in another screens. ');
+END IF;
+END IF;
+end if;
+END IF;
+
+If Deleting Then          /*On deleting the Employee*/
+DELETE FROM FIN_M_SALESMAN WHERE SALESMAN_CODE = :Old.Employee_Id
+                             AND COMPANY_CODE  = :Old.Company_code;
+end if;                             
+ Exception 
+    When Others Then
+      PKG_GEN_DEBUG.Set_Debug_Log('TR_AD_PAY_M_EMPLOYEE','Trigger',SQLERRM);
+      Raise;
+End;
