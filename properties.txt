@@ -148,4 +148,3 @@ CUSTOMER_SUPPLIER_OS_AGENT=Customer/Supplier/OS Agent
 HEADER_REQUIRED__=Header Required ?
 PrintHeader=Print Header?
 PICK_CHARGES=Pick Charges
-New Proprty Added = 
