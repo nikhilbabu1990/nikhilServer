@@ -15,7 +15,7 @@ package com.uravatech.ast.addition.view.bean;
 
 import oracle.adf.model.binding.DCIteratorBinding;
 
-
+//After push to server
 
 import oracle.jbo.Row;
 public class AstTAdditionBean extends UravaMasterPageBean {
